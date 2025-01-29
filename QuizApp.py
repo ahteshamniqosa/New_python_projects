@@ -16,7 +16,7 @@ class QuizApp:
             },
             {
                 'question': 'Question 2: Which CSS property is used to control the spacing between lines of text?',
-                'options': ['margin', ' padding', 'line-height', 'font-size'],
+                'options': ['margin', 'padding', 'line-height', 'font-size'],
                 'answer': 'line-height'
             },
             {
@@ -25,8 +25,8 @@ class QuizApp:
                 'answer': 'To handle side effects like data fetching'
             },
             {
-                'question': 'Question 4:  What is the primary benefit of using Vue,s v-model directive?',
-                'options': ['Two-way data binding', ' One-way data binding', ' Component rendering optimization', 'Event handling'],
+                'question': 'Question 4: What is the primary benefit of using Vue\'s v-model directive?',
+                'options': ['Two-way data binding', 'One-way data binding', 'Component rendering optimization', 'Event handling'],
                 'answer': 'Two-way data binding'
             },
             {
@@ -65,15 +65,22 @@ class QuizApp:
         self.correct_answers = 0
         self.user_answers = []
 
-        self.question_label = tk.Label(root, text=self.questions[self.current_question]['question'], font=("Arial", 16, 'bold'), fg='white', bg='#F39C12')
+        self.question_label = tk.Label(root, text=self.questions[self.current_question]['question'], font=("Arial", 16, 'bold'), fg='white', bg='#000')
         self.question_label.pack(pady=20)
 
         self.option_buttons = []
         for i in range(4):
-            btn = tk.Button(root, text=self.questions[self.current_question]['options'][i], width=80, height=2,
-                            font=("Arial", 14), bg='#FAD7A0', fg='#000', activebackground='#F39C12',
+            btn = tk.Button(root, text=self.questions[self.current_question]['options'][i], 
+                            width=80, height=2, font=("Arial", 14), 
+                            bg='#16D1D3', fg='#000', activebackground='#00c3ff', relief="flat",
                             command=lambda i=i: self.store_answer(i))
             btn.pack(pady=10)
+
+            btn.bind("<Enter>", lambda e, b=btn: b.config(bg="#00c3ff"))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg="#16D1D3"))
+            btn.bind("<ButtonPress>", lambda e, b=btn: b.config(bg="#00526a"))
+            btn.bind("<ButtonRelease>", lambda e, b=btn: b.config(bg="#00c3ff"))
+
             self.option_buttons.append(btn)
 
     def store_answer(self, option_index):
@@ -87,13 +94,11 @@ class QuizApp:
             self.show_result()
 
     def load_next_question(self):
-
         self.question_label.config(text=self.questions[self.current_question]['question'])
         for i in range(4):
             self.option_buttons[i].config(text=self.questions[self.current_question]['options'][i])
 
     def show_result(self):
-        
         self.correct_answers = sum(1 for i in range(10) if self.user_answers[i] == self.questions[i]['answer'])
         if self.correct_answers >= 7:
             messagebox.showinfo("Result", f"You are clear for this interview! Correct Answers: {self.correct_answers}/10")
